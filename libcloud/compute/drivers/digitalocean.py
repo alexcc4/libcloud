@@ -185,6 +185,12 @@ class DigitalOcean_v2_NodeDriver(DigitalOcean_v2_BaseDriver,
 
         return self._to_node(data=data)
 
+    def get_node(self, node):
+        res = self.connection.request('/v2/droplets/%s' % (node.id),
+                                      method='GET')
+
+        return self._to_node(data=res.object.get('droplet'))
+
     def destroy_node(self, node):
         res = self.connection.request('/v2/droplets/%s' % (node.id),
                                       method='DELETE')

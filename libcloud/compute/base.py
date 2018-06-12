@@ -844,6 +844,15 @@ class NodeDriver(BaseDriver):
         raise NotImplementedError(
             'create_node not implemented for this driver')
 
+    def get_node(self, node):
+        """
+        Get a node information
+        :return:
+        :rtype: :class:`.Node`
+        """
+        raise NotImplementedError(
+            'get_node not implemented for this driver')
+
     def deploy_node(self, **kwargs):
         """
         Create a new node, and start deployment.
@@ -1384,9 +1393,10 @@ class NodeDriver(BaseDriver):
         uuids = set([node.uuid for node in nodes])
 
         while time.time() < end:
-            all_nodes = self.list_nodes(**ex_list_nodes_kwargs)
-            matching_nodes = list([node for node in all_nodes
-                                   if node.uuid in uuids])
+            matching_nodes = [self.get_node(node) for node in nodes]
+            # all_nodes = self.list_nodes(**ex_list_nodes_kwargs)
+            # matching_nodes = list([node for node in all_nodes
+            #                        if node.uuid in uuids])
 
             if len(matching_nodes) > len(uuids):
                 found_uuids = [node.uuid for node in matching_nodes]
